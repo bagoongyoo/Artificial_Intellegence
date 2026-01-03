@@ -1,18 +1,13 @@
-
-
-# 1. Dataset Besar (Wajib di-ignore)
-anime_faces.zip
-dataset_extracted/
-
-# 2. Folder Environment Python 
+# Abaikan folder environment
 .venv/
-env_baru/
 __pycache__/
 
-# 3. Sampah Notebook 
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/
+# Abaikan dataset (karena filenya besar)
+dataset_extracted/
+anime_faces.zip
 
-# 4. Folder Output Model 
-output_model/
-*.pth
+# Abaikan checkpoint (notebook otomatis nyimpen state)
+.ipynb_checkpoints/
+
+
+ checkpoints/
