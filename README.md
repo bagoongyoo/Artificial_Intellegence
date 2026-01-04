@@ -11,9 +11,10 @@ Tujuan utama proyek ini adalah membangun model generatif yang stabil menggunakan
 **Fitur & Spesifikasi Teknis:**
 * **Generator:** Menggunakan *Transposed Convolution* untuk upsampling dari noise vector (100) menjadi gambar RGB (64x64).
 * **Discriminator:** Menggunakan CNN standar dengan LeakyReLU untuk klasifikasi biner (Real vs Fake).
-* **Optimasi:** Menggunakan **Adam Optimizer** (lr=`0.0002`, beta1=`0.5`).
-* **Stabilitas Training:** Menerapkan teknik **Label Smoothing** (target label **0.93**) pada Discriminator.
-    > *Catatan: Label 'Real' diatur ke 0.93 (bukan 1.0) untuk menjaga keseimbangan. Nilai ini memberikan Discriminator keyakinan yang cukup tinggi (akurasi ~80%) tanpa menyebabkan gradien menjadi jenuh (vanishing gradient) yang sering terjadi jika menggunakan label mutlak 1.0.*
+* **Optimasi (Fine-Tuned):** Menggunakan **Adam Optimizer** dengan strategi *Split Learning Rate* untuk menjaga dominasi Discriminator di angka optimal (~80%):
+    * **Learning Rate Discriminator:** `0.0002` (Standar)
+    * **Learning Rate Generator:** `0.0001` (Diperlambat agar Discriminator lebih akurat).
+* **Stabilitas Training:** Menerapkan teknik **Label Smoothing** (target label **0.98**) pada Discriminator.
 
 ## 📂 Dataset
 
@@ -27,14 +28,18 @@ Dataset yang digunakan adalah kumpulan wajah anime yang telah di-crop dan dibers
 
 Berikut adalah perbandingan hasil generate model dari awal hingga akhir training:
 
-| Epoch 1 (Awal) & Epoch 50 (Final) |
-
+| Epoch 1 (Awal) | Epoch 50 (Final) |
+| :---: | :---: |
 | ![Epoch 1](results/epoch_1.png) | ![Final](results/epoch_50_final.png) |
 *(Gambar di atas adalah hasil generate murni dari model)*
 
-### Grafik Loss
+### Grafik Loss & Analisis
 ![Loss Graph](results/loss_graph.png)
-*Grafik di atas menunjukkan dinamika kompetisi antara Generator dan Discriminator. Fluktuasi adalah hal wajar dalam GAN, namun tren loss tetap terjaga berkat penggunaan Label Smoothing.*
+
+> **Analisis Hasil:**
+> Dengan menerapkan strategi penurunan *Learning Rate* pada Generator menjadi `0.0001` dan *Label Smoothing* `0.93`, model berhasil mencapai titik konvergensi yang sehat.
+> * **Akurasi Discriminator:** Terjaga stabil di rentang **80% - 82%**.
+> * **Kualitas Citra:** Discriminator yang cukup kuat memaksa Generator untuk menghasilkan detail wajah yang lebih tajam dan struktur mata yang jelas, menghindari masalah gambar *blur* yang sering terjadi jika Discriminator terlalu lemah.
 
 ## 🛠️ Requirements & Instalasi
 
